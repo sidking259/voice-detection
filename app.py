@@ -41,7 +41,8 @@ app = FastAPI(
 # ===============================
 class VoiceRequest(BaseModel):
     audio_data: str                 # Base64 encoded MP3
-    language: str | None = "Unknown" # Tamil, Hindi, English, etc.
+    language: str | None = "Unknown"# Tamil, Hindi, English, etc.
+    audioBase64: str
 
 # ===============================
 # FEATURE EXTRACTION
@@ -84,7 +85,7 @@ async def detect_voice(
 
     try:
         with open(temp_file, "wb") as f:
-            f.write(base64.b64decode(payload.audio_data))
+            f.write(base64.b64decode(payload.audioBase64))
     except Exception:
         raise HTTPException(status_code=400, detail="Invalid Base64 audio data")
 
@@ -127,3 +128,4 @@ async def detect_voice(
         "language_detected": payload.language,
         "explanation": explanation
     }
+
